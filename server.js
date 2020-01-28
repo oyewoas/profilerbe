@@ -10,7 +10,7 @@ const dbConnect = require('./app/db/dbConnection');
 
 // Add middleware for parsing URL encoded bodies (which are usually sent by browser)
 app.use(cors());
-
+app.use('/public', express.static('public'));
 // Add middleware for parsing JSON and urlencoded data and populating `req.body`
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

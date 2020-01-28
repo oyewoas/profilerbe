@@ -2,13 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UsersSchema = new Schema({
-    photo: {
-        data: Buffer,
-        contentType: String,
+    profileImg: {
+        type: String,
         required: true
     },
     phone_number: {
-        type: Number,
+        type: String,
         required: true
     },
     address: {

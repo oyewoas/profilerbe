@@ -8,7 +8,7 @@ class Database {
     }
     dbConnect() {
 
-            mongoose.connect(`${env.mongodb_url}`, {useNewUrlParser: true, useCreateIndex: true})
+            mongoose.connect(`${env.mongodb_url}`, {useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology: true })
                 .then(() => {
                     console.log('Database connection successful');
 
