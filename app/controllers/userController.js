@@ -5,11 +5,32 @@ const env = require('../../env');
 const status = require('../helpers/statuses');
 const messages = require('../helpers/messages');
 const errorCodes = require('../helpers/errorCodes');
+const uploadImg = require('../middlewares/uploadImg')
 
+const uploadImage = async (req, res) => {
+    console.log('req.file:', req.file)
+    try{
+        const response = await uploadImg.cloudinary.v2.uploader.upload(req.file.path);
+        res.status(200).json({
+            status: status.ok,
+            message: messages.signUp.success,
+            imageUrl: response.url
+        });
+    } catch(err){
+        res.status(500).json({
+            status: status.error,
+            message:'Error uploading image'
+        });
+    }
+   
+    
+}
+
+  
 const signUpUser = async (req, res) => {
-    // const url = req.protocol + '://' + req.get('host')
-    // req.body.profileImg = url + '/public/' + req.file.filename
     try {
+        const profImg = await uploadImg.cloudinary.v2.uploader.upload(req.file.path);
+        req.body.profileImg = profImg.url
         req.body.password = await bcrypt.hash(req.body.password, 10);
         const user = await UsersModel.create(req.body);
         const response = user.toJSON();
@@ -35,6 +56,7 @@ const signUpUser = async (req, res) => {
                 message: messages.signUp.duplicateEmail
             });
         } else {
+            console.log(err.message, 'error')
             res.status(500).json({
                 status: status.error,
                 message: messages.signUp.error
@@ -175,5 +197,6 @@ module.exports = {
     signInUser,
     userProfile,
     editProfile,
-    updateProfile
+    updateProfile,
+    uploadImage
 };

@@ -1,29 +1,28 @@
-const multer = require('multer'),
-      uuidv4 = require('uuid/v4'),
+const cloudinary = require('cloudinary')
+const multer = require('multer')
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const env = require('../../env')
 
-      DIR = './public/';
+cloudinary.config({
+    cloud_name: env.cloudinary_name,
+    api_key: env.cloudinary_api_key,
+    api_secret: env.cloudinary_api_secret
+})
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, DIR);
-    },
-    filename: (req, file, cb) => {
-        const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, uuidv4() + '-' + fileName)
-    }
-});
 
-const upload = multer({
-    storage: storage,
+const parser = multer({
+    storage: multer.diskStorage({}),
     fileFilter: (req, file, cb) => {
-        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-            cb(null, true);
-        } else {
-            cb(null, false);
-            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        if (!file.mimetype.match(/jpe|jpeg|png|gif$i/)) {
+            cb(new Error("File is not supported"), false);
+            return;
         }
+        cb(null, true);
     }
 });
 
 
-module.exports = upload
+module.exports = {
+    parser,
+    cloudinary
+}
