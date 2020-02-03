@@ -162,6 +162,11 @@ const updateProfile = async (req, res) => {
                 message: 'User Not Found'
             })
         } else {
+            if(typeof req.body.profileImg !== 'string' && req.file.path !== undefined){
+                const profImg = await uploadImg.cloudinary.v2.uploader.upload(req.file.path);
+                req.body.profileImg = profImg.url
+            }
+           
             const {
                 profileImg,
                 phone_number,
@@ -183,7 +188,6 @@ const updateProfile = async (req, res) => {
             data: user
         });
     } catch (err) {
-        console.log(err, 'update error');
 
         res.status(401).json({
             status: 'error',

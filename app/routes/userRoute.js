@@ -11,7 +11,7 @@ router.post('/user/upload', uploadImg.parser.single('profileImg'), UserControlle
 router.post('/user/signup', uploadImg.parser.single('profileImg'), UserController.signUpUser);
 router.get('/user/profile', userAuth, UserController.userProfile);
 router.get('/user/edit/profile/:userId', userAuth, UserController.editProfile)
-router.put('/user/update/profile/:userId', userAuth, UserController.updateProfile)
+router.put('/user/update/profile/:userId', uploadImg.parser.single('profileImg'), userAuth, UserController.updateProfile)
 
 
 module.exports = router;
